@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@theme {
+  --color-neon-blue: #00F2FF;
+  --color-neon-purple: #bc13fe;
+  --color-neon-pink: #ff00ff;
+  --color-neon-cyan: #0ff;
+  
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+}
+
+body {
+  @apply bg-[#08090D] text-[#E2E8F0] overflow-x-hidden;
+  font-family: var(--font-sans);
+}
+
+.glass {
+  @apply bg-white/5 backdrop-blur-[10px] border border-white/10 rounded-[24px] transition-all duration-300 ease-out;
+}
+
+.neon-text {
+  color: #00F2FF;
+  text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+}
+
+.neon-border {
+  border: 1px solid rgba(0, 242, 255, 0.3);
+  box-shadow: inset 0 0 15px rgba(0, 242, 255, 0.1), 0 0 15px rgba(0, 242, 255, 0.05);
+}
+
+.stat-bar {
+  @apply h-1.5 bg-white/10 rounded-full overflow-hidden;
+}
+
+.stat-fill {
+  @apply h-full bg-[#00F2FF] shadow-[0_0_10px_rgba(0,242,255,0.5)];
+}
+
+.neon-glow-blue {
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.3), 0 0 5px rgba(0, 242, 255, 0.2);
+}
+
+@keyframes pulse-neon {
+  0%, 100% { opacity: 0.8; filter: drop-shadow(0 0 5px var(--color-neon-blue)); }
+  50% { opacity: 1; filter: drop-shadow(0 0 20px var(--color-neon-blue)); }
+}
+
+.animate-neon {
+  animation: pulse-neon 2s infinite;
+}

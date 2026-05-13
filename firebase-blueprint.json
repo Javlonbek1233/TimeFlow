@@ -1,0 +1,61 @@
+{
+  "entities": {
+    "Task": {
+      "title": "Task",
+      "description": "A productivity task in the user's planner.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "completed": { "type": "boolean" },
+        "userId": { "type": "string" },
+        "dueDate": { "type": "string", "format": "date-time" },
+        "priority": { "type": "string", "enum": ["low", "medium", "high"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "userId", "completed", "createdAt", "updatedAt"]
+    },
+    "Habit": {
+      "title": "Habit",
+      "description": "A recurring habit for the user to track.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "userId": { "type": "string" },
+        "streak": { "type": "integer" },
+        "lastCompleted": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "userId", "streak", "createdAt"]
+    },
+    "UserSetting": {
+      "title": "UserSetting",
+      "description": "User specific app configuration.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "theme": { "type": "string" },
+        "pomodoroWorkLimit": { "type": "integer" },
+        "pomodoroBreakLimit": { "type": "integer" },
+        "worldClocks": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["userId"]
+    }
+  },
+  "firestore": {
+    "/tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Collection of user tasks."
+    },
+    "/habits/{habitId}": {
+      "schema": "Habit",
+      "description": "Collection of user habits."
+    },
+    "/settings/{userId}": {
+      "schema": "UserSetting",
+      "description": "Individual user settings."
+    }
+  }
+}

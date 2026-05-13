@@ -1,0 +1,6 @@
+{
+  "name": "TimeFlow",
+  "description": "A futuristic smart clock and productivity suite with AI assistance, Pomodoro timer, task management, and immersive animations.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["AI Productivity", "Real-time Tracking", "World Clock"]
+}

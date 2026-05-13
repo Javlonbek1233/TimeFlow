@@ -1,0 +1,66 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Standard Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // 1. Tasks
+    match /tasks/{taskId} {
+      function isValidTask(data) {
+        return data.title is string && data.title.size() <= 200 &&
+               data.userId == request.auth.uid &&
+               data.completed is bool &&
+               data.createdAt == request.time &&
+               data.updatedAt == request.time;
+      }
+
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(taskId) && isValidTask(request.resource.data);
+      allow update: if isSignedIn() && 
+                    resource.data.userId == request.auth.uid &&
+                    request.resource.data.userId == request.auth.uid &&
+                    request.resource.data.updatedAt == request.time &&
+                    request.resource.data.diff(resource.data).affectedKeys().hasAny(['title', 'completed', 'priority', 'dueDate', 'updatedAt']);
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // 2. Habits
+    match /habits/{habitId} {
+      function isValidHabit(data) {
+        return data.name is string && data.name.size() <= 100 &&
+               data.userId == request.auth.uid &&
+               data.streak is int &&
+               data.createdAt == request.time;
+      }
+
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidId(habitId) && isValidHabit(request.resource.data);
+      allow update: if isSignedIn() && 
+                    resource.data.userId == request.auth.uid &&
+                    request.resource.data.userId == request.auth.uid &&
+                    request.resource.data.diff(resource.data).affectedKeys().hasAny(['name', 'streak', 'lastCompleted']);
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // 3. Settings
+    match /settings/{userId} {
+      allow read: if isOwner(userId);
+      allow write: if isOwner(userId) && request.resource.data.userId == userId;
+    }
+  }
+}
